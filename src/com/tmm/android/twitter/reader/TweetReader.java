@@ -1,18 +1,16 @@
 package com.tmm.android.twitter.reader;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import android.util.Log;
+import com.tmm.android.twitter.util.Utility;
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import android.util.Log;
+import org.json.JSONObject;
 
-import com.tmm.android.twitter.util.Utility;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TweetReader {
 	
@@ -28,7 +26,7 @@ public class TweetReader {
 		List<Status> statuses = new ArrayList<Status>();
 	    try {
 	    	Paging p = new Paging(1);	//get first page only of timeline - dont want to return everything!
-			statuses = twitter.getFriendsTimeline(p);
+			statuses = twitter.getHomeTimeline(p);
 		} catch (TwitterException e) {
 			Log.e("Twitter", "Error retrieving tweets");
 			Log.e("Twitter", e.getMessage());
@@ -51,7 +49,7 @@ public class TweetReader {
 		try {
 			if (statuses.size()>0){
 				for (Status s : statuses){
-					String avatar = "http://" + s.getUser().getProfileImageURL().getHost() + s.getUser().getProfileImageURL().getPath();
+					String avatar = "http://" +s.getUser().getProfileImageURL();
 					JSONObject object = new JSONObject();
 					object.put("tweet", s.getText());
 					String timePosted = Utility.getDateDifference(s.getCreatedAt());
